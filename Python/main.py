@@ -59,17 +59,16 @@ while cam.isOpened():
             if fingNum != prevFingNum:
                 for i in range(5):
                     board.digital[i+3].write(0)
-                board.digital[fingNum+2].write(1)
+                for i in range(1,fingNum+1):
+                    board.digital[i+2].write(1)
 
             prevFingNum = fingNum
             
             cv2.putText(img, str(fingNum), (20,50), cv2.FONT_HERSHEY_PLAIN, 4, color = (255,20,20))
             # Adds the hand makers onto the image if they exist
             drawings.draw_landmarks(img, handLandmarks, mp.solutions.hands.HAND_CONNECTIONS)
-    else:
-        for i in range(5):
-            board.digital[i+3].write(0)
-            
+
+
     # Displays the image in a window labeled Output
     cv2.imshow('Output', img)
     if cv2.waitKey(1) == ord('q'):
