@@ -4,6 +4,7 @@ import mediapipe as mp
 import numpy as np
 import pyfirmata as firm
 import time
+import imutils
 
 
 board = firm.Arduino('COM3')
@@ -56,11 +57,14 @@ while cam.isOpened():
                     fingNum -=1
 
             
-            if fingNum != prevFingNum:
-                for i in range(5):
-                    board.digital[i+3].write(0)
+
+            for i in range(5):
+                board.digital[i+3].write(0)
+            if fingNum > 0:
                 for i in range(1,fingNum+1):
                     board.digital[i+2].write(1)
+            else:
+                for i in range(2,13): board.digital[i].write(0)
 
             prevFingNum = fingNum
             
@@ -70,6 +74,7 @@ while cam.isOpened():
 
 
     # Displays the image in a window labeled Output
+    img = imutils.resize(img,1920)
     cv2.imshow('Output', img)
     if cv2.waitKey(1) == ord('q'):
         break
